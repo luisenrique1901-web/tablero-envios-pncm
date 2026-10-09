@@ -2,81 +2,458 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tablero de envíos del menú · PNCM</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Envíos del menú · PNCM</title>
 <meta name="robots" content="noindex">
+<style>body{margin:0;padding:0}img{max-width:100%}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Source+Sans+3:wght@400;600;700&display=swap">
 <style>
-:root{--bg:#F4F7FA;--surface:#fff;--ink:#13212E;--ink2:#4A5A6A;--rule:#DCE3EA;--azul:#007AC7;--band:#0B3A66;--lima:#BDD300;--ok:#1E7B3E;--warn:#9A5B00}
-@media (prefers-color-scheme:dark){:root{--bg:#0E151C;--surface:#151F29;--ink:#E6EDF3;--ink2:#A7B4C0;--rule:#25323E;--azul:#2F92D6;--band:#0A2744;--ok:#4FBF74;--warn:#E3A33B}}
+/* Layout: barra fija con filtro de UT; resumen arriba, luego bloques temáticos en una columna ancha con pares de paneles que se apilan en celular */
+:root{
+  --bg:#F4F7FA; --surface:#FFFFFF; --ink:#13212E; --ink2:#4A5A6A; --muted:#748392; --rule:#DCE3EA;
+  --azul:#007AC7; --azul-soft:#E2EFF9; --magenta:#C00A76; --magenta-soft:#F8E3EE; --lima:#BDD300; --band:#0B3A66; --band-ink:#FFFFFF;
+  --warn:#9A5B00; --warn-soft:#FBEFD9; --ok:#1E7B3E;
+  --mt-head:#BFD730; --mt-head-ink:#1B2A0A; --mt-row:#74B8E3; --mt-row-ink:#0B2236; --mt-line:#2B3640; --mt-off:#EEF1F4; --ok-soft:#DDF1E3; --bad:#B42318; --bad-soft:#FCE4E2;
+  --f-display:"Archivo","Arial Narrow",Arial,sans-serif; --f-body:"Source Sans 3","Segoe UI",Arial,sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E151C; --surface:#151F29; --ink:#E6EDF3; --ink2:#A7B4C0; --muted:#7E8C99; --rule:#25323E;
+  --azul:#2F92D6; --azul-soft:#16304A; --magenta:#E0589F; --magenta-soft:#3A1B2D; --lima:#C9DE2E; --band:#0A2744; --band-ink:#F2F6FA;
+  --warn:#E3A33B; --warn-soft:#3A2C12; --ok:#4FBF74; --mt-head:#A9BF1F; --mt-head-ink:#141F05; --mt-row:#2D6E9C; --mt-row-ink:#F0F6FB; --mt-line:#5A6875; --mt-off:#1C2834; --ok-soft:#173A24; --bad:#F2877D; --bad-soft:#3D1D1B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E151C; --surface:#151F29; --ink:#E6EDF3; --ink2:#A7B4C0; --muted:#7E8C99; --rule:#25323E;
+  --azul:#2F92D6; --azul-soft:#16304A; --magenta:#E0589F; --magenta-soft:#3A1B2D; --lima:#C9DE2E; --band:#0A2744; --band-ink:#F2F6FA;
+  --warn:#E3A33B; --warn-soft:#3A2C12; --ok:#4FBF74; --mt-head:#A9BF1F; --mt-head-ink:#141F05; --mt-row:#2D6E9C; --mt-row-ink:#F0F6FB; --mt-line:#5A6875; --mt-off:#1C2834; --ok-soft:#173A24; --bad:#F2877D; --bad-soft:#3D1D1B; color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",Arial,sans-serif}
-header{background:var(--band);color:#fff;padding:20px 16px}
-header .w,main{max-width:760px;margin:0 auto}
-header small{opacity:.85;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
-h1{margin:4px 0 0;font-size:clamp(24px,5vw,34px);line-height:1.1}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 48px}
+header.band{background:var(--band);color:var(--band-ink);padding-block:22px 18px}
+header.band .wrap{padding-block:0;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;justify-content:space-between}
+.eyebrow{font-family:var(--f-display);font-stretch:85%;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:12px;opacity:.85}
+h1{font-family:var(--f-display);font-stretch:80%;font-weight:800;font-size:clamp(28px,4.4vw,44px);line-height:1.02;margin:4px 0 0;text-wrap:balance}
 h1 em{font-style:normal;color:var(--lima)}
-main{padding:20px 16px 40px}
-.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px}
-.estado{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:14px}
-.punto{width:10px;height:10px;border-radius:50%;background:var(--warn)}
-.punto.ok{background:var(--ok)}
-.big{font-size:56px;font-weight:700;color:var(--azul);line-height:1}
-.lab{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:14px}
-.flash{animation:f 1.2s ease}
-@keyframes f{from{background:rgba(189,211,0,.35)}to{background:transparent}}
-p.nota{color:var(--ink2);font-size:13px;margin-top:18px}
-pre{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--ink2);margin:0}
+.meta{font-size:13px;opacity:.85;max-width:44ch}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--rule)}
+.bar .wrap{padding-block:10px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.bar label{font-weight:600;font-size:13px;color:var(--ink2)}
+.bar .fgrp{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%}
+.bar .fgrp select{min-width:0;max-width:100%}
+select,input[type=search]{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);color:var(--ink)}
+select:focus-visible,input:focus-visible,button:focus-visible,th:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.bar nav{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px}
+.bar nav a{color:var(--ink2);text-decoration:none;border-bottom:1px solid transparent}
+.bar nav a:hover{color:var(--azul);border-color:var(--azul)}
+.bar{transition:transform .22s ease}
+@media (max-width:760px){
+  .bar .wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;padding-block:6px}
+  .bar .tabs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr)}
+  .bar .tabs button{padding:5px 8px;font-size:13.5px}
+  .bar .fgrp{display:block;min-width:0}
+  .bar .fgrp label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .bar .fgrp select{width:100%;font-size:13px;padding-block:5px;text-overflow:ellipsis}
+  .bar nav{grid-column:1/-1;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:0 14px;padding-bottom:2px}
+  .bar nav::-webkit-scrollbar{display:none}
+  .bar nav a{white-space:nowrap}
+  .bar nav[hidden]{display:none}
+  .bar.oculta{transform:translateY(calc(-100% - 2px))}
+}
+@media (prefers-reduced-motion:reduce){.bar{transition:none}}
+section{margin-top:34px}
+h2{font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:22px;margin:0 0 4px;text-wrap:balance}
+.lede{color:var(--ink2);margin:0 0 14px;max-width:72ch}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:22px}
+.kpi{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .lab{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi .val{font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:30px;line-height:1.1;color:var(--azul)}
+.kpi .sub{font-size:13px;color:var(--ink2)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:16px 18px;min-width:0}
+.panel h3{font-family:var(--f-display);font-stretch:90%;font-weight:700;font-size:16px;margin:0 0 2px}
+.panel .note{font-size:13px;color:var(--muted);margin:0 0 10px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:middle}
+th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+th.sort{cursor:pointer;user-select:none}
+th.sort:hover{color:var(--azul)}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--azul-soft)}
+table.cmp{font-size:13px}
+.kpi .labw{display:flex;align-items:center;justify-content:center;gap:8px}
+.kpi .ic{flex:none;width:30px;height:30px;border-radius:50%;background:var(--azul-soft);color:var(--azul);display:inline-flex;align-items:center;justify-content:center}
+.kpi .ic svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media (min-width:600px){.kpi .labw .lab{white-space:nowrap}}table.cmp th,table.cmp td{padding:6px 7px}table.cmp th{font-size:11.5px;letter-spacing:.03em;vertical-align:bottom}
+table.cmp .sub2{display:block;font-size:11.5px;color:var(--muted)}
+.minibar{height:8px;background:var(--azul-soft);border-radius:4px;overflow:hidden;min-width:70px}
+.minibar span{display:block;height:100%;background:var(--azul);border-radius:4px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink2);margin-bottom:8px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+svg text{fill:var(--ink2);font-family:var(--f-body);font-size:12px}
+svg .ax{stroke:var(--rule);stroke-width:1}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;padding:5px 11px;border:0;background:var(--surface);color:var(--ink2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--azul);color:#fff}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--warn-soft);color:var(--warn);white-space:nowrap}
+.chip.blue{background:var(--azul-soft);color:var(--azul)}
+.obs{display:grid;gap:10px}
+.obs article{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:12px 16px}
+.obs .num{font-family:var(--f-display);font-stretch:85%;font-weight:800;font-size:26px;color:var(--warn);grid-row:span 2;min-width:2.2ch;text-align:right}
+.obs h4{margin:0;font-size:15px}
+.obs p{margin:0;color:var(--ink2);font-size:14px}
+.hbar{display:grid;grid-template-columns:minmax(110px,230px) 1fr auto;gap:10px;align-items:center;padding:4px 0}
+.hbar .nm{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.hbar .track{height:14px;position:relative}
+.hbar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0}
+.hbar .track .ref{position:absolute;top:-3px;bottom:-3px;border-left:2px dashed var(--ink2);z-index:1}
+.hbar .v{font-size:13px;color:var(--ink2);white-space:nowrap;text-align:right;min-width:64px}
+/* Todas las filas de un gráfico comparten las columnas: así el ancho de la barra es el mismo en cada fila y las longitudes son proporcionales */
+.hb{display:grid;grid-template-columns:minmax(110px,230px) minmax(0,1fr) auto;column-gap:10px;align-items:center}
+.hb>.hbar{display:contents}
+.hb>.hbar>*{margin-block:4px}
+.hb>:not(.hbar){grid-column:1/-1}
+#tip{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.35;padding:7px 10px;border-radius:7px;max-width:280px;opacity:0;transition:opacity .08s}
+#tip.on{opacity:1}
+.drawer{margin-top:12px;background:var(--surface);border:1px solid var(--azul);border-radius:var(--r);padding:16px 18px}
+.drawer h3{margin:0;font-family:var(--f-display);font-stretch:85%;font-size:20px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 18px;margin:10px 0;font-size:14px}
+.facts b{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.foot{margin-top:40px;font-size:13px;color:var(--muted);max-width:80ch}
+.ok{color:var(--ok)}
+
+.tabs{display:inline-flex;gap:2px;background:var(--bg);border:1px solid var(--rule);border-radius:9px;padding:2px}
+.tabs button{font:inherit;font-weight:600;font-size:14px;padding:6px 14px;border:0;border-radius:7px;background:transparent;color:var(--ink2);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--azul);color:#fff}
+.mfil{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:flex-end;margin-bottom:14px}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld label{font-weight:600;font-size:13px;color:var(--ink2)}
+#fSA{max-width:min(100%,460px)}
+.weekctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.weekctl button{font:inherit;font-size:14px;padding:6px 11px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);cursor:pointer}
+.weekctl button:disabled{opacity:.4;cursor:default}
+.weekctl button.ghost{color:var(--azul);border-color:var(--azul)}
+.sheet{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:16px}
+.shead{display:grid;grid-template-columns:minmax(170px,1fr) minmax(0,3fr) minmax(150px,1fr);gap:6px 16px;align-items:end;min-width:860px;margin-bottom:8px}
+.shead .t{text-align:center;font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:17px;line-height:1.2}
+.shead .t span{display:block;font-weight:600;font-size:15px}
+.shead .l{font-weight:700;font-size:15px}
+.shead .r{text-align:right;font-weight:700;font-size:15px}
+.shead .r u{text-decoration:none;border-bottom:1px solid var(--ink);padding:0 10px;font-weight:600}
+table.mt{min-width:1000px;border-collapse:collapse;table-layout:fixed;font-size:13px}
+table.mt th,table.mt td{border:1px solid var(--mt-line);padding:0;text-align:center;vertical-align:middle;white-space:normal;overflow-wrap:anywhere}
+table.mt thead th{background:var(--mt-head);color:var(--mt-head-ink);font-family:var(--f-display);font-stretch:90%;font-weight:700;font-size:13.5px;letter-spacing:0;text-transform:none;padding:8px 6px;white-space:normal}
+table.mt thead th.d small{display:block;font-weight:600;font-size:12px}
+table.mt th.rh{background:var(--mt-row);color:var(--mt-row-ink);font-weight:700;font-size:12.5px;padding:6px;text-transform:uppercase;letter-spacing:0}
+table.mt td.c{position:relative;height:84px;padding:20px 8px 8px;font-size:12.5px;line-height:1.3;background:var(--surface);color:var(--ink)}
+table.mt td.c .cod{position:absolute;top:0;left:0;min-width:44px;padding:1px 6px;border-right:1px solid var(--mt-line);border-bottom:1px solid var(--mt-line);font-size:11.5px;font-weight:700;color:var(--ink2);text-align:center}
+table.mt td.sa{background:var(--mt-off);color:var(--muted)}
+table.mt td.agua{height:auto;padding:8px;font-weight:600}
+table.mt td.vacio{color:var(--muted)}
+
+table.mt td.rcx{cursor:pointer}
+table.mt td.rcx:hover,table.mt td.rcx:focus-visible{background:var(--azul-soft);outline:2px solid var(--azul);outline-offset:-2px}
+table.mt tbody.ap{font-size:12px}
+table.mt tbody.ap td{padding:5px 2px;background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums}
+table.mt tbody.ap th.g{text-transform:none;background:var(--mt-head);color:var(--mt-head-ink);font-size:11.5px;padding:4px 2px}
+table.mt tbody.ap th.ru{text-transform:none}
+table.mt tbody.ap th.rl,table.mt tbody.ap th.ru{background:var(--mt-row);color:var(--mt-row-ink);font-size:11.5px;padding:5px 6px;text-align:left}
+table.mt tbody.ap th.tt{background:var(--band);color:var(--band-ink);font-size:12px;padding:7px 8px;text-align:left}
+table.mt tbody.ap td.okc{background:var(--ok-soft);color:var(--ok);font-weight:700}
+table.mt tbody.ap td.noc{background:var(--bad-soft);color:var(--bad);font-weight:700}
+table.mt tbody.ap td.sa{background:var(--mt-off);color:var(--muted)}
+table.mt tbody.ap td.refc{background:var(--surface);color:var(--ink);font-weight:400}
+table.mt tbody.ap td.wrc{background:var(--warn-soft);color:var(--warn);font-weight:700}
+.dsel{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 10px}
+.dsel button{font:inherit;font-size:13px;font-weight:700;padding:6px 2px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);cursor:pointer;line-height:1.15}
+.dsel button small{display:block;font-weight:500;font-size:11.5px;color:var(--ink2)}
+.dsel button.off{color:var(--muted)}
+.dsel button[aria-pressed="true"]{background:var(--azul);border-color:var(--azul);color:#fff}
+.dsel button[aria-pressed="true"] small{color:#fff}
+.sheet.uno .shead{min-width:0;grid-template-columns:1fr;gap:4px}
+.sheet.uno .shead .t{text-align:left;font-size:15.5px}
+.sheet.uno .shead .r{text-align:left;font-size:13px}
+.sheet.uno .shead .l{font-size:13px}
+table.mt.uno{min-width:0;width:100%}
+table.mt.uno td.c{height:auto;padding:20px 8px 10px;font-size:13px}
+table.mt.uno th.rh{font-size:11.5px;padding:6px 5px;overflow-wrap:normal;hyphens:auto}
+table.mt.uno th.rh small{display:block;margin-top:3px;font-size:11px;font-weight:500;text-transform:none}
+table.mt.uno{hyphens:auto}
+table.mt.uno tbody.ap th{overflow-wrap:normal}
+table.mt.uno thead th{font-size:12.5px;padding:7px 4px}
+.rc-ov{position:fixed;inset:0;z-index:30;background:rgba(8,18,28,.55);display:flex;align-items:flex-start;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) 16px 24px;overflow:auto}
+.rc-box{background:var(--surface);color:var(--ink);border-radius:14px;max-width:760px;width:100%;padding:20px 22px;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+.rc-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.rc-head h3{font-family:var(--f-display);font-stretch:85%;font-size:22px;line-height:1.15;margin:4px 0 0;text-wrap:balance}
+.rc-x{font:inherit;font-size:24px;line-height:1;width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);background:var(--bg);color:var(--ink);cursor:pointer;flex:none}
+table.rc{font-size:13.5px;min-width:420px}
+table.rc th{font-size:11.5px;text-transform:none}
+table.rc td.n,table.rc th.n{text-align:right;white-space:nowrap}
+.rc-sub{font-family:var(--f-display);font-stretch:90%;font-size:15px;margin:16px 0 4px}
+.rc-tot{margin:12px 0 6px;font-size:14.5px}
+.rc-tot b{color:var(--azul)}
+.pc{font-size:11px;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:0 6px;margin-left:4px}
+a.salink,a.vermenu{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
+a.salink:hover,a.vermenu:hover{color:var(--azul);text-decoration-color:var(--azul)}
+a.vermenu{color:var(--azul);white-space:nowrap}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){  .hb{grid-template-columns:minmax(96px,38%) minmax(0,1fr);row-gap:0}
+  .hb>.hbar>.nm{grid-row:span 2;align-self:center;white-space:normal;line-height:1.25;font-size:12.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .hb>.hbar>.track{grid-column:2;margin-block:6px 0}
+  .hb>.hbar>.v{grid-column:2;text-align:left;min-width:0;font-size:12px;margin-block:2px 6px}}
+
+/* día señalado desde una alerta */
+.foco{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 10px;padding:8px 10px 8px 12px;border:1px solid var(--magenta);border-left-width:4px;border-radius:8px;background:var(--magenta-soft);font-size:13.5px}
+.foco .fm{flex:1 1 220px}
+.foco .fd{display:flex;flex-wrap:wrap;gap:4px}
+.foco .fd button{font:inherit;font-size:12.5px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid var(--magenta);background:var(--surface);color:var(--magenta);cursor:pointer}
+.foco .fd button[aria-pressed="true"]{background:var(--magenta);color:#fff}
+.foco .fx{font:inherit;font-size:18px;line-height:1;padding:2px 8px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+table.mt th.d.fo{box-shadow:inset 0 0 0 3px var(--magenta)}
+table.mt td.c.fo{box-shadow:inset 3px 0 0 var(--magenta),inset -3px 0 0 var(--magenta)}
+table.mt tr:last-child td.c.fo{box-shadow:inset 3px 0 0 var(--magenta),inset -3px 0 0 var(--magenta),inset 0 -3px 0 var(--magenta)}
+a.vermenu.cnt{display:inline-block;min-width:1.8em;padding:1px 6px;border-radius:6px;font-weight:700;text-decoration:underline;text-underline-offset:2px;color:var(--azul)}
+a.vermenu.cnt:hover{background:var(--azul-soft)}
+.wl{font-size:12px;color:var(--warn)}
+.wl a.verlista,.wl a.vermenu{color:var(--warn);font-weight:600;text-decoration:underline;text-underline-offset:2px;min-width:0;padding:0}
+a.verlista{color:var(--azul);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+a.verlista:hover{text-decoration-thickness:2px}
+a.verlista.chipl{text-decoration:none}
+a.verlista.chipl .chip{cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+a.vermenu.fl{white-space:normal}
+table.lst td{vertical-align:top}
+a.vermenu.chipl{text-decoration:none}
+a.vermenu.chipl .chip{cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+a.vermenu.chipl:hover .chip{outline:1px solid var(--warn)}
+
+table.mt tbody.ap tr.sp td{height:14px;padding:0;border-left-color:transparent;border-right-color:transparent;background:var(--surface)}
+table.mt thead th{position:relative;z-index:3;will-change:transform}
+table.mt thead.fija th{box-shadow:inset 1px 0 0 var(--mt-line),inset -1px 0 0 var(--mt-line),0 1px 0 var(--mt-line),0 4px 6px -3px rgba(0,0,0,.3)}
+table.mt thead.fija th.d.fo{box-shadow:inset 0 0 0 3px var(--magenta),0 4px 6px -3px rgba(0,0,0,.3)}
+table.mt.uno tbody.ap th.rl,table.mt.uno tbody.ap th.ru{font-size:10.5px;padding:5px 4px}
+table.mt tbody.ap td.fol{box-shadow:inset 3px 0 0 var(--magenta)}
+table.mt tbody.ap td.for{box-shadow:inset -3px 0 0 var(--magenta)}
+table.mt tbody.ap td.fol.for{box-shadow:inset 3px 0 0 var(--magenta),inset -3px 0 0 var(--magenta)}
+table.mt tbody.ap tr:last-child td.fo{border-bottom:3px solid var(--magenta)}
+table.mt th.rh small{display:block;margin-top:3px;font-size:11px;font-weight:500;text-transform:none}
+
+table.mt tbody.ap tr.sec th{position:relative;z-index:2}
+table.mt tbody.ap tr.sec.fija th{box-shadow:inset 1px 0 0 var(--mt-line),inset -1px 0 0 var(--mt-line),0 1px 0 var(--mt-line),0 4px 6px -3px rgba(0,0,0,.3)}
+
+table.mt.uno tbody.ap th.ed{text-align:right;font-size:10.5px;padding:4px 6px}
+table.mt.uno tbody.ap tr.sec th.g{padding:4px 2px;font-size:11px}
+
+/* receta ordenada por grupo de alimento */
+:root{--ga-cer:#C98500;--ga-rai:#D2691E;--ga-leg:#6A4FC0;--ga-lac:#2A78D6;--ga-car:#D63B3A;--ga-pes:#14967A;--ga-ver:#2E8B2E;--ga-fru:#D2457E;--ga-ace:#8C7A3E;--ga-azu:#9A6A9A;--ga-pot:#7A8591;--ga-otr:#9AA4AE}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ga-cer:#E0A53A;--ga-rai:#E8894A;--ga-leg:#9D8BEA;--ga-lac:#5BA0EC;--ga-car:#EC7372;--ga-pes:#3CC39F;--ga-ver:#5DBB5D;--ga-fru:#E87BA4;--ga-ace:#C2AE6C;--ga-azu:#C99BC9;--ga-pot:#A2ADB8;--ga-otr:#8792A0}}
+:root[data-theme="dark"]{--ga-cer:#E0A53A;--ga-rai:#E8894A;--ga-leg:#9D8BEA;--ga-lac:#5BA0EC;--ga-car:#EC7372;--ga-pes:#3CC39F;--ga-ver:#5DBB5D;--ga-fru:#E87BA4;--ga-ace:#C2AE6C;--ga-azu:#C99BC9;--ga-pot:#A2ADB8;--ga-otr:#8792A0}
+table.rcg tr.gh td{padding:9px 8px 3px;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--gc);border-bottom:2px solid var(--gc)}
+table.rcg tr.gh:first-child td{padding-top:4px}
+table.rcg tr.gh .gdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--gc);margin-right:7px;vertical-align:0}
+table.rcg tr.gi td:first-child{box-shadow:inset 3px 0 0 var(--gc);padding-left:10px}
+.kpi .amb{display:flex;flex-wrap:wrap;gap:2px 12px}
+.kpi .amb b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+@media (min-width:900px){.kpis{grid-template-columns:repeat(12,1fr)}.kpis .kpi{grid-column:span 3}.kpis .kpi:nth-child(n+5){grid-column:span 4}}
+.kpi .amb .dir{color:var(--muted);font-size:12px}
+.nut-h{margin:22px 0 0;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.nut-h .nut-src{display:block;text-transform:none;letter-spacing:0;font-weight:500;font-size:12.5px;margin-top:2px}
+.kpis5{margin-top:10px}
+@media (min-width:900px){.kpis.kpis5 .kpi{grid-column:auto}}
+.kpi .meta{font-weight:600;color:var(--ink2)}.kpi .meta.bajo{color:var(--warn)}
+.kpis.kpis5{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.kpis5 .kpi .amb{display:grid;grid-template-columns:auto auto;gap:1px 10px;justify-content:center;margin-top:4px;font-size:12.5px}
+.kpis5 .kpi .amb>span{white-space:nowrap}
+@media (max-width:600px){.kpis5 .kpi .amb{grid-template-columns:auto;font-size:12px}}
+.kpi .dirn{display:block;margin-top:4px;font-size:11.5px;color:var(--muted);line-height:1.3}
+.kpis .kpi{text-align:center;align-items:center}
+.kpi .amb{justify-content:center}
+.kpi[data-tip]{cursor:help}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+#navRes a[hidden]{display:none}
+.uttag{color:var(--azul);font-weight:inherit}
+h3.ut-t .uttag{margin-right:6px}
+.hut{color:var(--band-ink);font-style:normal}
+.okbox{display:flex;gap:10px;align-items:flex-start;background:var(--ok-soft);color:var(--ink);border:1px solid var(--ok);border-radius:var(--r);padding:14px 16px;font-size:14.5px}
+.okbox .okic{flex:none;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-weight:700;font-size:13px}
+.okbox[hidden],.panel[hidden]{display:none}
+</style>
+<style>
+.vivo{display:flex;align-items:center;gap:7px;margin:6px 0 0;opacity:1}
+.vivo .pv{flex:none;width:9px;height:9px;border-radius:50%;background:#E3A33B}
+.vivo .pv.ok{background:#7BD389;box-shadow:0 0 0 3px rgba(123,211,137,.25)}
 </style>
 </head>
 <body>
-<header><div class="w"><small>Programa Nacional Cuna Más · Servicio de Cuidado Diurno</small>
-<h1>Tablero de envíos · <em>prueba de conexión</em></h1></div></header>
-<main>
-  <div class="card" id="tarjeta">
-    <div class="estado"><span class="punto" id="punto"></span><span id="estado">Conectando con la base de datos…</span></div>
-    <div class="lab">Contador de prueba</div>
-    <div class="big" id="contador">—</div>
-    <div class="grid">
-      <div><div class="lab">Mensaje</div><div id="mensaje">—</div></div>
-      <div><div class="lab">Escrito por Apps Script a las</div><div id="hora">—</div></div>
-      <div><div class="lab">Recibido en esta página</div><div id="recibido">—</div></div>
+<header class="band">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Programa Nacional Cuna Más · Servicio de Cuidado Diurno</div>
+      <h1>Envíos del menú · <em id="hPer">octubre 2026</em><span id="hUT" class="hut"></span></h1>
     </div>
+    <div><p class="meta" id="hMeta"></p><p class="meta vivo" id="hVivo"></p></div>
   </div>
-  <p class="nota">Página temporal para comprobar que lo que escribe el Apps Script aparece aquí al instante, sin recargar. Será reemplazada por el tablero.</p>
-  <div class="card"><div class="lab" style="margin-bottom:6px">Documento recibido</div><pre id="crudo">—</pre></div>
+</header>
+<div class="bar">
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Vistas">
+      <button type="button" role="tab" id="tbRes" aria-selected="true" aria-controls="vRes">Resumen</button>
+      <button type="button" role="tab" id="tbMen" aria-selected="false" aria-controls="vMen">Menú semanal</button>
+      <button type="button" role="tab" id="tbEnv" aria-selected="false" aria-controls="vEnv">Envíos</button>
+    </div>
+    <span class="fgrp" title="Entre paréntesis, los envíos vigentes"><label for="fMes">Mes</label><select id="fMes"></select></span>
+    <span class="fgrp" title="Entre paréntesis, los envíos vigentes"><label for="fUT">Unidad territorial</label><select id="fUT"></select></span>
+    <nav aria-label="Secciones" id="navRes">
+      <a href="#presupuesto">Presupuesto</a><a href="#alimentos">Alimentos</a><a href="#aporte">Aporte</a><a href="#calidad">Calidad</a><a href="#detalle">Detalle</a>
+    </nav>
+  </div>
+</div>
+<main class="wrap">
+<div id="vRes" role="tabpanel" aria-labelledby="tbRes">
+  <div class="kpis" id="kpis"></div>
+  <h3 class="nut-h" id="nutHead">Aporte nutricional promedio del menú <span class="nut-src">Cobertura del requerimiento diario: Directiva Prestación del SCD v5, numeral 7.3 · Proteínas en % de las kcal: rango de referencia RIEN</span></h3>
+  <div class="kpis kpis5" id="kpisNut"></div>
+
+  <section id="presupuesto">
+    <h2>Presupuesto y costo del menú</h2>
+    <p class="lede">Costo del menú programado (pedido no perecible más pedido perecible) frente al presupuesto calculado con el costo por día del Anexo A de la Directiva "Modelo de cogestión comunal" v9 (RDE 002100-2025): S/ 4.40 por niña o niño y S/ 3.45 por actor comunal en ámbito urbano, y S/ 4.70 y S/ 3.75 en ámbito rural o de selva, multiplicados por los usuarios del pedido no perecible y los días con menú. El ámbito sale del tipo de comité de gestión en el listado de CG (urbano o rural); a los comités urbanos ubicados en distritos de selva alta o selva baja, según la región natural del INEI (Ubigeos 2022), se les aplica el costo de rural o selva.</p>
+    <div class="grid2">
+      <div class="panel">
+        <h3 id="hEjec">Uso del presupuesto por servicio alimentario</h3>
+        <p class="note">Costo del menú entre el presupuesto calculado. A la derecha, el saldo que queda sin usar; en ámbar y con signo +, lo que el costo excede al presupuesto. La línea punteada marca el 100 % del presupuesto. Toque un nombre para ver su detalle.</p>
+        <div id="cEjec"></div>
+      </div>
+      <div class="panel">
+        <h3 id="hNino">Costo por niña o niño y día de atención</h3>
+        <p class="note">Costo de los alimentos para usuarios (lo pedido más el valor de los saldos de no perecibles que usa el menú) entre el número de niñas y niños del pedido no perecible y los días con menú programado. La línea marca la mediana.</p>
+        <div id="cNino"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="alimentos">
+    <h2>Qué se está pidiendo</h2>
+    <p class="lede">Suma de los pedidos de todos los servicios alimentarios seleccionados.</p>
+    <div class="grid2">
+      <div class="panel">
+        <div style="display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:center">
+          <h3>Los 15 alimentos con más peso en el pedido</h3>
+          <div class="seg" role="group" aria-label="Medida"><button type="button" id="mS" aria-pressed="true">Costo (S/)</button><button type="button" id="mK" aria-pressed="false">Volumen (kg o L)</button></div>
+        </div>
+        <div class="legend" style="margin-top:8px"><span><i class="sw" style="background:var(--azul)"></i>No perecible</span><span><i class="sw" style="background:var(--magenta)"></i>Perecible</span></div>
+        <div id="cFood"></div>
+      </div>
+      <div class="panel">
+        <h3>Costo por grupo de alimentos</h3>
+        <p class="note" id="npNote"></p>
+        <div id="cGrupo"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="aporte">
+    <h2>Días que no alcanzan la meta de aporte nutricional</h2>
+    <p class="lede" id="apLede"></p>
+    <div class="okbox" id="tApOk" hidden></div>
+    <div class="panel scroll" id="tApWrap"><table id="tAp"></table></div>
+    <div class="panel" style="margin-top:16px">
+      <h3 class="ut-t">Cobertura del requerimiento por grupo de edad</h3>
+      <p class="note">Porcentaje del requerimiento diario de energía y nutrientes que cubre el menú del día (media mañana, almuerzo, fruta y media tarde). Promedio de todos los días con menú de los servicios seleccionados, frente al mínimo de la Directiva "Prestación del Servicio de Cuidado Diurno" v5 (RDE 002496-2025), numeral 7.3, Cuadros N° 05 y 06. En 6 a 8 y 9 a 11 meses el calcio es referencial. Un día queda bajo la meta si al menos un nutriente no alcanza su mínimo. Toque el número de días para ver los servicios y las fechas.</p>
+      <div class="scroll"><table id="tCob"></table></div>
+    </div>
+    <h3 class="ut-t" style="margin:22px 0 6px">Proteínas por debajo del rango de referencia <span class="chip blue" style="vertical-align:2px">criterio técnico</span></h3>
+    <p class="lede" id="apMacLede"></p>
+    <div class="okbox" id="tApMacOk" hidden></div>
+    <div class="panel scroll" id="tApMacWrap"><table id="tApMac"></table></div>
+    <div class="panel" style="margin-top:16px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:center">
+        <h3 id="hMacG">Porcentaje de las calorías que viene de proteínas</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <div class="seg" role="group" aria-label="Vista" id="segMacV"></div>
+          <div class="seg" role="group" aria-label="Macronutriente" id="segMac"></div>
+        </div>
+      </div>
+      <div class="legend" style="margin:8px 0 4px"><span><i class="sw" style="background:var(--azul);opacity:.35;border-radius:50%"></i>Un día de un servicio</span><span><i class="sw" style="background:var(--azul-soft);border:1.5px solid var(--azul)"></i>50 % central de los días (cuartiles)</span><span><i class="sw" style="background:var(--ink);width:3px"></i>Mediana</span><span><i class="sw" style="background:var(--surface);border:1.5px solid var(--ink);border-radius:50%"></i>Promedio</span><span><i class="sw" style="background:var(--ok-soft)"></i>Rango de referencia</span></div>
+      <div id="cMacG"></div>
+      <p class="note" id="nMacG"></p>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <h3>Distribución de las calorías por macronutriente</h3>
+      <p class="note">Porcentaje de las calorías del menú del día (media mañana, almuerzo, fruta y media tarde) que viene de proteínas, grasas y carbohidratos, con los factores 4, 9 y 4 kcal por gramo. Promedio de todos los días con menú de los servicios seleccionados. En 12 a 36 meses se compara con el rango aceptable de distribución de macronutrientes para niñas y niños de 1 a 3 años de las Recomendaciones de Ingesta de Energía y Nutrientes (RIEN) de Colombia (Resolución 3803 de 2016 del Ministerio de Salud y Protección Social): proteínas 10 a 20 %, grasas 25 a 35 % y carbohidratos 50 a 65 %. No hay una norma peruana que fije esta distribución; en 6 a 11 meses es referencial, porque la leche materna aporta buena parte de la grasa del día. Un día queda fuera de rango si al menos un macronutriente sale del rango; no se cuenta como incumplimiento del aporte. Toque el número de días para ver los servicios y las fechas.</p>
+      <div class="scroll"><table id="tMac"></table></div>
+    </div>
+  </section>
+
+  <section id="proveedores">
+    <h2>Proveedores</h2>
+    <div class="grid2">
+      <div class="panel"><h3>No perecibles</h3><p class="note">Servicios alimentarios atendidos por cada proveedor.</p><div id="cProvNP"></div></div>
+      <div class="panel"><h3>Perecibles</h3><p class="note">Servicios alimentarios atendidos por cada proveedor.</p><div id="cProvP"></div></div>
+    </div>
+  </section>
+
+  <section id="calidad">
+    <h2>Calidad de los datos</h2>
+    <p class="lede" id="calLede">Situaciones que conviene revisar antes de usar estas cifras.</p>
+    <div class="obs" id="obs"></div>
+  </section>
+
+  <section id="detalle">
+    <h2 id="detH">Detalle por servicio alimentario</h2>
+    <p class="lede" id="detLede">Servicios alimentarios de la UT/OCT filtrada. Toque una fila para ver el pedido y el menú de ese servicio; toque los días bajo la meta para ir al menú de esos días. Toque un encabezado para ordenar.</p>
+    <div style="margin-bottom:10px"><label for="q" style="font-weight:600;font-size:13px;color:var(--ink2);margin-right:8px">Buscar</label><input type="search" id="q" placeholder="Nombre, CUI o comité de gestión" style="width:min(100%,340px)"></div>
+    <div class="panel scroll"><table id="tSA" class="cmp"></table></div>
+    <div id="drawer"></div>
+  </section>
+
+</div>
+<div id="vEnv" role="tabpanel" aria-labelledby="tbEnv" hidden>
+  <section id="avance" style="margin-top:22px">
+    <h2>Avance de los envíos</h2>
+    <p class="lede" id="avLede"></p>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Por unidad territorial</h3>
+        <p class="note" id="avNote"></p>
+        <div class="scroll"><table id="tAv"></table></div>
+        <p class="note" id="sinEnv" style="margin-top:10px"></p>
+      </div>
+      <div class="panel">
+        <h3>Envíos recibidos por día</h3>
+        <p class="note">Incluye los envíos que luego fueron reemplazados por un reenvío.</p>
+        <div class="legend"><span><i class="sw" style="background:var(--azul)"></i>Vigente</span><span><i class="sw" style="background:var(--magenta)"></i>Reemplazado por un reenvío</span></div>
+        <div id="cDia"></div>
+      </div>
+    </div>
+  </section>
+  <section id="alertasEnv">
+    <h2>Alertas sobre los envíos</h2>
+    <p class="lede">Las situaciones de Calidad de los datos que tienen que ver con los envíos mismos: CUI equivocados y reenvíos.</p>
+    <div class="obs" id="obsEnv"></div>
+  </section>
+</div>
+<div id="vMen" role="tabpanel" aria-labelledby="tbMen" hidden>
+  <section style="margin-top:22px">
+    <h2>Menú programado por semana</h2>
+    <p class="lede">Reconstruido desde la tabla MENUPROG del último envío vigente de cada servicio alimentario, con la misma estructura de la hoja MENU de la herramienta.</p>
+    <div class="mfil">
+      <div class="fld"><label for="fSA">Servicio alimentario</label><select id="fSA"></select></div>
+      <div class="fld"><label for="fSem">Semana</label>
+        <div class="weekctl"><button type="button" id="wPrev" aria-label="Semana anterior">‹</button><select id="fSem"></select><button type="button" id="wNext" aria-label="Semana siguiente">›</button><button type="button" id="wHoy" class="ghost">Semana en curso</button></div>
+      </div>
+    </div>
+    <div class="sheet scroll" id="sheet"></div>
+    <p class="note" id="sheetNote" style="margin-top:10px"></p>
+  </section>
+</div>
+  <p class="foot" id="foot"></p>
 </main>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAQ2IYB4dWpYN9cd2QVOaGM6qV3VNKS1ZE",
-  authDomain: "tablero-envios-pncm.firebaseapp.com",
-  projectId: "tablero-envios-pncm",
-  storageBucket: "tablero-envios-pncm.firebasestorage.app",
-  messagingSenderId: "451578736279",
-  appId: "1:451578736279:web:fc61c6f9ee23564bee43d2"
-};
-
-const db = getFirestore(initializeApp(firebaseConfig));
-const $ = id => document.getElementById(id);
-const fmt = d => d.toLocaleString("es-PE", { timeZone: "America/Lima", dateStyle: "short", timeStyle: "medium" });
-
-onSnapshot(doc(db, "tablero", "prueba"), snap => {
-  $("punto").classList.add("ok");
-  if (!snap.exists()) { $("estado").textContent = "Conectado. Aún no hay datos: ejecuta probarFirestore() en Apps Script."; return; }
-  const d = snap.data();
-  $("estado").textContent = "Conectado: los cambios aparecen solos";
-  $("contador").textContent = d.contador ?? "—";
-  $("mensaje").textContent = d.mensaje ?? "—";
-  $("hora").textContent = d.hora?.toDate ? fmt(d.hora.toDate()) : "—";
-  $("recibido").textContent = fmt(new Date());
-  $("crudo").textContent = JSON.stringify(d, (k, v) => (v && v.seconds !== undefined && v.nanoseconds !== undefined) ? new Date(v.seconds * 1000).toISOString() : v, 2);
-  const t = $("tarjeta"); t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
-}, err => {
-  $("estado").textContent = "No se pudo leer la base de datos: " + err.message;
-});
-</script>
+<div id="tip" role="tooltip"></div>
+<div id="rcOv" class="rc-ov" hidden><div class="rc-box" id="rcBox" role="dialog" aria-modal="true" aria-labelledby="rcT"></div></div>
+<script src="armar.js"></script>
+<script src="app.js"></script>
+<script type="module" src="boot.mjs"></script>
 </body>
 </html>
