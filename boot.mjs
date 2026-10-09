@@ -20,7 +20,18 @@ const DET = {}, DETP = {};          // detalle de cada envío (no cambia: se des
 window.__MESES = []; window.__ENVVIG = {};
 
 function estado(txt, ok) { const e = $('#hVivo'); if (e) e.innerHTML = '<span class="pv' + (ok ? ' ok' : '') + '"></span>' + txt; }
-function estadoOk() { estado('En vivo: la página se actualiza sola con cada envío', true); }
+let AVISOS = [];                    // últimos envíos avisados por la recepción (documento tablero/vivo)
+const hhmm = t => t.slice(11, 16);
+function estadoOk() {
+  const D = Dact; if (!D) return;
+  const ya = new Set(D.ult || []);
+  const nuevos = AVISOS.filter(x => x.per === mes && !ya.has(x.id) && x.t.slice(0, 16) >= (D.corte || ''));
+  if (!nuevos.length) { estado('En vivo: la página se actualiza sola con cada envío', true); return; }
+  const u = nuevos[0];
+  const e = $('#hVivo'); if (!e) return;
+  e.innerHTML = '<span class="pv nuevo"></span><span>' + (nuevos.length === 1 ? 'Nuevo envío recibido: ' : nuevos.length + ' envíos nuevos recibidos; el último: ') +
+    '<b>' + u.sa.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</b> (' + u.ut.replace(/[&<>"]/g, '') + '), ' + hhmm(u.t) + ' h · el tablero se actualiza en un momento</span>';
+}
 const vistaAct = () => !$('#vMen') || $('#vMen').hidden ? ($('#vEnv') && !$('#vEnv').hidden ? 'env' : 'res') : 'menu';
 
 /* detalle de un servicio (menú semanal y recetario): true si ya está, o una promesa */
@@ -80,6 +91,7 @@ window.__cambiarMes = p => {
 };
 
 estado('Conectando con la base de datos…');
+onSnapshot(doc(db, 'tablero', 'vivo'), sn => { try { AVISOS = sn.exists() ? (JSON.parse(sn.data().d).lista || []) : []; } catch (_) { AVISOS = []; } if (montado) estadoOk(); }, () => {});
 onSnapshot(doc(db, 'tablero', 'meses'), sn => {
   if (!sn.exists()) { estado('Todavía no hay datos publicados.'); return; }
   const L = JSON.parse(sn.data().d);                     // [[AAAA-MM, envíos vigentes], ...]

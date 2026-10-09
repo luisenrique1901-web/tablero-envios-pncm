@@ -284,6 +284,9 @@ h3.ut-t .uttag{margin-right:6px}
 .vivo{display:flex;align-items:center;gap:7px;margin:6px 0 0;opacity:1}
 .vivo .pv{flex:none;width:9px;height:9px;border-radius:50%;background:#E3A33B}
 .vivo .pv.ok{background:#7BD389;box-shadow:0 0 0 3px rgba(123,211,137,.25)}
+.vivo .pv.nuevo{background:#BDD300;animation:pvn 1.2s ease-in-out infinite}
+@keyframes pvn{50%{box-shadow:0 0 0 6px rgba(189,211,0,.35)}}
+@media (prefers-reduced-motion:reduce){.vivo .pv.nuevo{animation:none}}
 </style>
 </head>
 <body>
