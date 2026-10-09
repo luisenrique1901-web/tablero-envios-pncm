@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tablero de envíos del menú · PNCM</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#F4F7FA;--surface:#fff;--ink:#13212E;--ink2:#4A5A6A;--rule:#DCE3EA;--azul:#007AC7;--band:#0B3A66;--lima:#BDD300;--ok:#1E7B3E;--warn:#9A5B00}
+@media (prefers-color-scheme:dark){:root{--bg:#0E151C;--surface:#151F29;--ink:#E6EDF3;--ink2:#A7B4C0;--rule:#25323E;--azul:#2F92D6;--band:#0A2744;--ok:#4FBF74;--warn:#E3A33B}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",Arial,sans-serif}
+header{background:var(--band);color:#fff;padding:20px 16px}
+header .w,main{max-width:760px;margin:0 auto}
+header small{opacity:.85;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+h1{margin:4px 0 0;font-size:clamp(24px,5vw,34px);line-height:1.1}
+h1 em{font-style:normal;color:var(--lima)}
+main{padding:20px 16px 40px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px}
+.estado{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:14px}
+.punto{width:10px;height:10px;border-radius:50%;background:var(--warn)}
+.punto.ok{background:var(--ok)}
+.big{font-size:56px;font-weight:700;color:var(--azul);line-height:1}
+.lab{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:14px}
+.flash{animation:f 1.2s ease}
+@keyframes f{from{background:rgba(189,211,0,.35)}to{background:transparent}}
+p.nota{color:var(--ink2);font-size:13px;margin-top:18px}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--ink2);margin:0}
+</style>
+</head>
+<body>
+<header><div class="w"><small>Programa Nacional Cuna Más · Servicio de Cuidado Diurno</small>
+<h1>Tablero de envíos · <em>prueba de conexión</em></h1></div></header>
+<main>
+  <div class="card" id="tarjeta">
+    <div class="estado"><span class="punto" id="punto"></span><span id="estado">Conectando con la base de datos…</span></div>
+    <div class="lab">Contador de prueba</div>
+    <div class="big" id="contador">—</div>
+    <div class="grid">
+      <div><div class="lab">Mensaje</div><div id="mensaje">—</div></div>
+      <div><div class="lab">Escrito por Apps Script a las</div><div id="hora">—</div></div>
+      <div><div class="lab">Recibido en esta página</div><div id="recibido">—</div></div>
+    </div>
+  </div>
+  <p class="nota">Página temporal para comprobar que lo que escribe el Apps Script aparece aquí al instante, sin recargar. Será reemplazada por el tablero.</p>
+  <div class="card"><div class="lab" style="margin-bottom:6px">Documento recibido</div><pre id="crudo">—</pre></div>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAQ2IYB4dWpYN9cd2QVOaGM6qV3VNKS1ZE",
+  authDomain: "tablero-envios-pncm.firebaseapp.com",
+  projectId: "tablero-envios-pncm",
+  storageBucket: "tablero-envios-pncm.firebasestorage.app",
+  messagingSenderId: "451578736279",
+  appId: "1:451578736279:web:fc61c6f9ee23564bee43d2"
+};
+
+const db = getFirestore(initializeApp(firebaseConfig));
+const $ = id => document.getElementById(id);
+const fmt = d => d.toLocaleString("es-PE", { timeZone: "America/Lima", dateStyle: "short", timeStyle: "medium" });
+
+onSnapshot(doc(db, "tablero", "prueba"), snap => {
+  $("punto").classList.add("ok");
+  if (!snap.exists()) { $("estado").textContent = "Conectado. Aún no hay datos: ejecuta probarFirestore() en Apps Script."; return; }
+  const d = snap.data();
+  $("estado").textContent = "Conectado: los cambios aparecen solos";
+  $("contador").textContent = d.contador ?? "—";
+  $("mensaje").textContent = d.mensaje ?? "—";
+  $("hora").textContent = d.hora?.toDate ? fmt(d.hora.toDate()) : "—";
+  $("recibido").textContent = fmt(new Date());
+  $("crudo").textContent = JSON.stringify(d, (k, v) => (v && v.seconds !== undefined && v.nanoseconds !== undefined) ? new Date(v.seconds * 1000).toISOString() : v, 2);
+  const t = $("tarjeta"); t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
+}, err => {
+  $("estado").textContent = "No se pudo leer la base de datos: " + err.message;
+});
+</script>
+</body>
+</html>
