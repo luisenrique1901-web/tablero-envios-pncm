@@ -177,6 +177,24 @@ function avance(){
     rows.map(r=>'<tr'+(UT===r.u?' style="background:var(--azul-soft)"':'')+'><td><a href="#" class="salink" data-ut="'+esc(UT===r.u?'TODAS':r.u)+'" title="'+(UT===r.u?'Quitar el filtro de UT':'Filtrar por '+esc(r.u))+'">'+esc(r.u)+'</a>'+(UT===r.u?' <span class="chip blue" style="margin-left:4px">filtro activo</span>':'')+'</td><td class="n">'+r.e+'</td><td class="n">'+r.n+'</td><td><div class="minibar"><span style="width:'+(r.e?r.n/r.e*100:0)+'%"></span></div></td><td class="n">'+nf0.format(r.e?r.n/r.e*100:0)+' %</td></tr>').join('')+'</tbody>';
   const sin = Object.keys(D.padUT).filter(u=>!env[u]).sort();
   $('#sinEnv').innerHTML = '<b>Todavía sin envíos ('+sin.length+'):</b> '+sin.map(esc).join(', ')+'.';
+  faltan(env);
+}
+// con una UT/OCT filtrada: servicios de su padrón que todavía no tienen envío vigente en el mes
+function faltan(env){
+  const box = $('#faltan'); if (!box) return;
+  if (UT==='TODAS' || !window.__PAD){ box.hidden = true; return; }
+  const ya = env[UT] || new Set();
+  const pad = window.__PAD.filter(p=>p[0]===UT);
+  const fl = pad.filter(p=>!ya.has(p[1])).sort((a,b)=>a[3].localeCompare(b[3],'es') || a[2].localeCompare(b[2],'es'));
+  box.hidden = false;
+  const mes = mesTxt(D.periodo).replace(/ \d{4}$/,'');
+  if (!fl.length){
+    $('#faltNote').textContent = 'Los '+pad.length+' servicios alimentarios del padrón de esta unidad territorial ya tienen un envío vigente para '+mes+'.';
+    $('#tFalt').innerHTML = ''; return;
+  }
+  $('#faltNote').textContent = fl.length+' de '+pad.length+' servicios alimentarios del padrón todavía no tienen un envío vigente para '+mes+'. Ordenados por comité de gestión.';
+  $('#tFalt').innerHTML = '<thead><tr><th class="n">N°</th><th>Servicio alimentario</th><th class="n">CUI</th><th>Comité de gestión</th><th>Distrito</th></tr></thead><tbody>'+
+    fl.map((p,i)=>'<tr><td class="n">'+(i+1)+'</td><td>'+esc(p[2])+'</td><td class="n">'+esc(p[1])+'</td><td>'+esc(p[3])+'</td><td>'+esc(p[4])+'</td></tr>').join('')+'</tbody>';
 }
 function porDia(){
   const rows = D.porDia; // [dia, NO, SI]

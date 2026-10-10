@@ -91,6 +91,8 @@ window.__cambiarMes = p => {
 };
 
 estado('Conectando con la base de datos…');
+// padrón de servicios alimentarios (para la lista de los que aún no envían, con una UT filtrada)
+onSnapshot(doc(db, 'tablero', 'padron'), sn => { try { window.__PAD = sn.exists() ? JSON.parse(sn.data().d) : null; } catch (_) { window.__PAD = null; } if (montado) programar(true); }, () => {});
 onSnapshot(doc(db, 'tablero', 'vivo'), sn => { try { AVISOS = sn.exists() ? (JSON.parse(sn.data().d).lista || []) : []; } catch (_) { AVISOS = []; } if (montado) estadoOk(); }, () => {});
 onSnapshot(doc(db, 'tablero', 'meses'), sn => {
   if (!sn.exists()) { estado('Todavía no hay datos publicados.'); return; }
